@@ -1,91 +1,35 @@
 <!doctype html>
-<style>
-	body {
-		font-family:Helvetica, sans-serif;
-	}
-	div {
-		margin:1em 0;
-	}
-	.hidden {
-		display:none;
-	}
-	#nouns {
-		-webkit-columns: 150px;
-  		-moz-columns: 150px;
-  		columns: 150px;
-  		-webkit-column-gap: 1em;
-  		-moz-column-gap: 1em;
-  		column-gap: 1em;
-	}
-</style>
-<h2>Index of New Words</h2>
-<a href="index.html">home</a>
-<a href="about.html">about</a>
-<div id="set">
-	<a href="#all" onclick="loadset('allnouns');">all nouns</a>
-	<a href="#some" onclick="loadset('somenouns');">some nouns</a>
-</div>
+<html>
+<head>
+	<title>index of new words</title>
+	<link rel="stylesheet" href="style.css" type="text/css">
+	<meta charset="utf-8" />
+	
+</head>
+<body>
+	<div id="container">
+		<p><a href="index.html">Index of New Words</a></p>
+		<a href="about.html">about</a>
+		<div id="counter" class="hidden">
+			<a href="#alpha" id="alpha">alphabetize</a> • 
+			<a href="#stop" id="stop">stop loading</a> • 
+			<span></span>
+		</div>
+		<hr>
+		<div id="set">
+			<a href="#all" onclick="setNouns('allnouns');">all nouns</a><br>
+			<a href="#some" onclick="setNouns('somenouns');">some nouns</a>
+		</div>
 
-<div id="prefix" class="hidden">
-	<a href="#tele">Tele-</a>
-	<a href="#proto">Proto-</a>
-	<a href="#homo">Homo-</a>
-	<a href="#hetero">Hetero-</a>
-</div>
-<div id="stop" class="hidden">
-	<a href="#stop">stop loading</a>
-</div>
-<div id="nouns">
-</div>
+		<div id="prefix" class="hidden">
+		</div> 
+		
+ 		<div id="nouns">
+		</div>
+		<div id="alphabetical">
+		</div>
+	</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script>
-
-	var stop = false;
-	$('#stop').on('click', function() {
-		stop = true;
-		$(this).addClass('hidden');
-	});
-	var asyncLoop = function(o) {
-		var i=-1;
-
-		var loop = function() {
-			if (stop) return;
-			i++;
-			if (i==o.length){o.callback(); return;}
-			o.functionToLoop(loop, i);
-		}
-		loop();
-	}
-
-	var loadset = function(set) {
-		$.ajax({
-			url: "./"+set+".txt",
-			success: function(data) {
-				var nouns = data.split(',\n');
-				var prefixDiv = $('#prefix');
-				prefixDiv.removeClass("hidden");
-				
-				prefixDiv.children().on('click', function() {
-					$("#stop").removeClass("hidden");
-					var prefix = this.href.split('#')[1];
-
-					asyncLoop({
-						length:nouns.length,
-						functionToLoop : function(loop, i) {
-							setTimeout(function() {
-								$('#nouns').append(prefix + nouns[i] + "<br>");
-								loop();
-							}, 1);
-						},
-						callback : function() {
-							console.log("done!");
-						}
-					});
-
-				});
-			}
-		});
-	}
-
-</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="nouns.js"></script>
+</body>
