@@ -30,6 +30,7 @@ var loadPrefixes = function() {
 		url: "./pref.txt",
 		success: function(data) {
 			var prefixes = data.split('\n');
+			prefixes.sort();
 			for (var i = 0; i < prefixes.length; i++) {
 				var prefDiv = $('<a>')
 					.attr({"href":"#"+prefixes[i]})
