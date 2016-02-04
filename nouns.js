@@ -76,7 +76,11 @@ var loadNouns = function(set) {
 				stop = true;
 				$('#nouns').addClass('hidden');
 				for (var i = 0; i < alphabet.length; i++) {
-					$('#alphabetical').append("<strong>" + alphabet[i] + "<strong>");
+					var alphaheader = $("<div>")
+						.attr({id:"alphaheader"})
+						.css({float:"right"});
+					$('#alphabetical').append("<strong>" + alphabet[i] + "</strong> ");
+					$('#alphabetical').append(alphaheader);
 					$('#alphabetical').append("<hr>");
 					var newalpha = $("<div>")
 						.addClass("prefix")
@@ -98,8 +102,7 @@ var loadNouns = function(set) {
 							count++;
 						}
 					}
-					$('#alphabetical').append("<br>");
-					$('#alphabetical').append("( " + matches + " / " + count + " ) ");
+					
 					var letterLink = $('<a>')
 						.attr({"href":"#" + alphabet[i]})
 						.text("See all " + alphabet[i] + " ⟶")
@@ -121,7 +124,8 @@ var loadNouns = function(set) {
 								}
 							}
 						});
-					$('#alphabetical').append(letterLink);
+					alphaheader.append("( " + matches + " / " + count + " ) ");
+					alphaheader.append(letterLink);
 					$('#alphabetical').append("<br><br>");
 				}
 			});
