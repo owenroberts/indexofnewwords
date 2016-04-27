@@ -17,6 +17,9 @@
   		-moz-column-gap: 1em;
   		column-gap: 1em;
 	}
+	a:hover {
+		background: blue;
+	}
 </style>
 <h2>Index of New Words</h2>
 <a href="index.html">home</a>
@@ -74,9 +77,9 @@
 						length:nouns.length,
 						functionToLoop : function(loop, i) {
 							setTimeout(function() {
-								$('#nouns').append(prefix + nouns[i] + "<br>");
+								$('#nouns').append("<a href='#'>" + prefix + nouns[i] + "</a>" + "<br>");
 								loop();
-							}, 1);
+							}, 500);
 						},
 						callback : function() {
 							console.log("done!");
@@ -89,3 +92,7 @@
 	}
 
 </script>
+
+<!-- 
+http://stackoverflow.com/questions/4288759/asynchronous-for-cycle-in-javascript
+ -->
