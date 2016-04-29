@@ -150,6 +150,7 @@ var getDef = function() {
 	$("#nouns").addClass('hidden');
 	$("#prefix").addClass('hidden');
 	$("#alphabetical").addClass('hidden');
+	$("#counter").addClass('hidden');
 	$('#def-wrap').removeClass("hidden");
 	var pair = this.hash.split("-");
 	pair[0] = pair[0].replace('#', '');
