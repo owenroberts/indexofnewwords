@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title>index of new words</title>
+	<link rel="stylesheet" href="style.css" type="text/css">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+</head>
+<body>
+	<div id="container">
+		<p><a href="index.html"><strong>Index of New Words</strong></a></p>
+		<a href="index.html">Home</a>
+		<hr>
+		<p>Text TK</p>
+		
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script>
+	/*$.ajax({
+		url: "./pref.txt",
+		success: function(data) {
+			var prefixes = data.split('\n');
+			prefixes.sort();
+			$.ajax({
+				url: "./sonnetsf.txt",
+				success: function(text) {
+					var html = "";
+					var lines = text.split('\n');
+					var pref = prefixes[Math.floor(Math.random() * prefixes.length)];
+					lines.forEach( function(line)  {
+						var words = line.split(' ');
+						words.forEach( function(word) {
+							word = word.replace(/^\s+/, '').replace(/\s+$/, '');
+							if (word != "") {
+								html += pref;
+								html += word;
+								html += " ";
+							}
+						});
+						html += "<br>";
+					});
+					
+					$("#container").html(html);
+				}
+			})
+
+		}
+	});*/
+	</script>
+
+</body>

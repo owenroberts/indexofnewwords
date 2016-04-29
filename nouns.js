@@ -1,10 +1,15 @@
 var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 var stop = false;
 var nounset;
-var prefix;
+
+
 $('#stop').on('click', function(ev) {
 	ev.preventDefault();
 	stop = true;
+});
+
+$("#word").on('click', function() { 
+	$('#set').removeClass('hidden');
 });
 
 var asyncLoop = function(o) {
@@ -20,6 +25,7 @@ var asyncLoop = function(o) {
 }
 
 var setNouns = function(string) {
+	$('#menu').hide();
 	nounset = string;
 	$('#set').addClass('hidden');
 	loadPrefixes();
@@ -37,19 +43,22 @@ var loadPrefixes = function() {
 					.addClass("pref")
 					.text(prefixes[i]);
 				prefDiv.on('click', function() {
-					prefix = this.innerHTML;
-					$('#prefix').addClass('hidden');
-					loadNouns();
+					loadNouns(this.innerHTML);
 				});
-				$('#prefix').append(prefDiv);
-				$('#prefix').append("<br>");
+				$('#prefixes').append(prefDiv);
+				$('#prefixes').append("<br>");
 			}
 			$('#prefix').removeClass('hidden');
 		}
 	});
 }
 
-var loadNouns = function(set) {
+$('#input-prefix').on('change', function() {
+	loadNouns(this.value);
+});
+
+var loadNouns = function(prefix) {
+	$('#prefix').addClass('hidden');
 	$.ajax({
 		url: "./"+nounset+".txt",
 		success: function(data) {
@@ -61,7 +70,11 @@ var loadNouns = function(set) {
 				length:nouns.length,
 				functionToLoop : function(loop, i) {
 					setTimeout(function() {
-						$('#nouns').append(prefix + nouns[i] + "<br>");
+						var n = $('<a>')
+							.text(prefix + nouns[i])
+							.attr("href", "#" + prefix + "-" + nouns[i])
+							.addClass("newword");
+						$('#nouns').append(n).append("<br>");
 						$('#counter span').text(+i+1 + " / " + nouns.length);
 						loop();
 					}, 1);
@@ -93,8 +106,8 @@ var loadNouns = function(set) {
 							if (count < 25) {
 								matches++;
 								var prefDiv = $('<a>')
-									.attr({"href":"#"+ prefix + nouns[n]})
-									.addClass("pref")
+									.attr({"href":"#"+ prefix + "-" + nouns[n]})
+									.addClass("newword")
 									.text(prefix + nouns[n]);
 								$('#al'+i).append(prefDiv);
 								$('#al'+i).append("<br>");
@@ -110,13 +123,13 @@ var loadNouns = function(set) {
 							ev.preventDefault();
 							var letter = this.href.split("#")[1];
 							$('#alphabetical').addClass('hidden');
-							$('#prefix').empty().removeClass('hidden');
+							$('#prefix').empty().removeClass('hidden').addClass("prefix");
 							
 							for (var n = 0; n < nouns.length; n++) {
 								if (nouns[n][0] == letter) {
 									var prefDiv = $('<a>')
-										.attr({"href":"#"+ prefix + nouns[n]})
-										.addClass("pref")
+										.attr({"href":"#"+ prefix + "-" + nouns[n]})
+										.addClass("newword")
 										.text(prefix + nouns[n]);
 									$('#prefix').append(prefDiv);
 									$('#prefix').append("<br>");
@@ -133,3 +146,16 @@ var loadNouns = function(set) {
 	});
 }
 
+var getDef = function() {
+	$("#nouns").addClass('hidden');
+	$("#prefix").addClass('hidden');
+	$("#alphabetical").addClass('hidden');
+	$('#def-wrap').removeClass("hidden");
+	var pair = this.hash.split("-");
+	pair[0] = pair[0].replace('#', '');
+	$('#prefix-word').html(pair[0] + pair[1]);
+};
+$('body').on('click', '.newword', getDef);
+
+
+//if ( location.href.includes("#") ) getDef();

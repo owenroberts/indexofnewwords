@@ -14,12 +14,13 @@ div {
 
 #container {
 	text-align: left; 
-	min-height: 100%; 
+/*	min-height: 100%; */	
 	height: auto !important; 
 	height: 100%; 
 	margin-left: auto; 
 	margin-right: auto; 
 	margin-bottom:-4em; 
+	margin-top:1em;
 	padding: 0;s
 }
 hr { width: auto; height: 1px; border:0; border-top: 1px solid black; margin-top:1em; margin-bottom:1em;}	
@@ -27,13 +28,14 @@ hr { width: auto; height: 1px; border:0; border-top: 1px solid black; margin-top
 a {
 	text-decoration: none;
 	color:black;
+	cursor:pointer;
 }
-a:hover { text-decoration: underline; }
+a:hover { /*text-decoration: underline;*/ color: #46FDFD; }
 .active { font-weight: bold; }
 .hidden {
 	display:none;
 }
-#nouns, #prefix, .prefix {
+#nouns, #prefixes, .prefix {
 	-webkit-columns: 150px;
 	-moz-columns: 150px;
 	columns: 150px;
@@ -44,6 +46,37 @@ a:hover { text-decoration: underline; }
 
 #counter {
 	float:right;
+}
+#menu {
+	float:left;
+}
+#set {
+	margin-left:150px;
+}
+
+#def-wrap {
+	
+}
+
+#def {
+	
+}
+
+#prefix-wrap {
+	float:left;
+}
+
+#noun-wrap {
+	margin-left:150px;
+}
+
+#noun-def h2, #noun-def h3, #noun-def p {
+	display:none;
+}
+
+#prefix-word, #noun-word {
+	font-weight: bold;
+	margin-bottom:0.5em;
 }
 
 @media (min-width:320px) { /* smartphones, iPhone, portrait 480x320 phones */ 
