@@ -75,12 +75,7 @@ var loadNouns = function(prefix) {
 				functionToLoop : function(loop, i) {
 					setTimeout(function() {
 						var n = $('<a>')
-							.on("mouseover", function(){
-								$(this).css({color:"hsla("+getRandomInt(30,300, 200)+","+getRandomInt(60,90)+"%,"+getRandomInt(50, 80)+"%,1)"});
-							})
-							.on("mouseout", function(){
-								$(this).css({color:"black"});
-							})
+							
 							.text(prefix + nouns[i])
 							.attr("href", "#" + prefix + "-" + nouns[i])
 							.addClass("newword");
@@ -162,6 +157,13 @@ var loadNouns = function(prefix) {
 	});
 }
 
+$('body').on("mouseover", ".newword", function(){
+	$(this).css({color:"hsla("+getRandomInt(30,300, 200)+","+getRandomInt(60,90)+"%,"+getRandomInt(50, 80)+"%,1)"});
+})
+.on("mouseout", ".newword", function(){
+	$(this).css({color:"black"});
+})
+
 var getDef = function() {
 	$("#nouns").addClass('hidden');
 	$("#prefix").addClass('hidden');
@@ -170,7 +172,35 @@ var getDef = function() {
 	$('#def-wrap').removeClass("hidden");
 	var pair = this.hash.split("-");
 	pair[0] = pair[0].replace('#', '');
-	$('#prefix-word').html(pair[0] + pair[1]);
+	$('#prefix-word').html(pair[0]);
+	$('#noun-word').html(pair[1]);
+
+
+	$.ajax({
+		url: "https://en.wiktionary.org/w/api.php",
+    	dataType: 'jsonp', 
+    	data: { 
+        	action: "query", 
+        	prop: 'extracts', 
+        	
+        	titles: pair[1],
+        	format: "json",
+        	
+    	},
+		success: function(data) {
+			console.log(data.query);
+			var html = "";
+			for (var obj in data.query.pages) {
+				console.log(data.query.pages[obj].extract);
+				html = data.query.pages[obj].extract;
+			}
+			
+			$('#noun-def').html(html);
+		},
+		error: function(error) {
+			console.log(error);
+		}
+	});
 };
 $('body').on('click', '.newword', getDef);
 

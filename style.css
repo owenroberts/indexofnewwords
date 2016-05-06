@@ -1,5 +1,4 @@
 body {
-	height: 100%; 
 	padding:0; 
 	margin:0; 
 	font: 10pt/1.4 Verdana, Arial, sans-serif; 
@@ -14,9 +13,6 @@ div {
 
 #container {
 	text-align: left; 
-/*	min-height: 100%; */	
-	height: auto !important; 
-	height: 100%; 
 	margin-left: auto; 
 	margin-right: auto; 
 	margin-bottom:-4em; 
@@ -71,10 +67,14 @@ li:before { content: "—"; position:relative; left:-6px;}
 
 #prefix-wrap {
 	float:left;
+	width:30%;
+	display:inline-block;
 }
 
 #noun-wrap {
-	margin-left:150px;
+	float:left;
+	width:60%;
+	margin-left:1em;
 }
 
 #noun-def h2, #noun-def h3, #noun-def p {
@@ -84,6 +84,10 @@ li:before { content: "—"; position:relative; left:-6px;}
 #prefix-word, #noun-word {
 	font-weight: bold;
 	margin-bottom:0.5em;
+}
+
+.searchmatch {
+	font-weight:bold;
 }
 
 @media (min-width:320px) { /* smartphones, iPhone, portrait 480x320 phones */ 
