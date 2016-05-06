@@ -1,3 +1,7 @@
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 var stop = false;
 var nounset;
@@ -71,6 +75,12 @@ var loadNouns = function(prefix) {
 				functionToLoop : function(loop, i) {
 					setTimeout(function() {
 						var n = $('<a>')
+							.on("mouseover", function(){
+								$(this).css({color:"rgb("+getRandomInt(150, 200)+","+getRandomInt(150, 255)+","+getRandomInt(150, 255)});
+							})
+							.on("mouseout", function(){
+								$(this).css({color:"black"});
+							})
 							.text(prefix + nouns[i])
 							.attr("href", "#" + prefix + "-" + nouns[i])
 							.addClass("newword");
@@ -107,6 +117,9 @@ var loadNouns = function(prefix) {
 								matches++;
 								var prefDiv = $('<a>')
 									.attr({"href":"#"+ prefix + "-" + nouns[n]})
+									.css({color: 
+										"rgba(255,0,255)"
+									})
 									.addClass("newword")
 									.text(prefix + nouns[n]);
 								$('#al'+i).append(prefDiv);
@@ -130,6 +143,9 @@ var loadNouns = function(prefix) {
 									var prefDiv = $('<a>')
 										.attr({"href":"#"+ prefix + "-" + nouns[n]})
 										.addClass("newword")
+										.css({color: 
+											"rgba(255,0,255)"
+										})
 										.text(prefix + nouns[n]);
 									$('#prefix').append(prefDiv);
 									$('#prefix').append("<br>");

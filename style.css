@@ -2,7 +2,7 @@ body {
 	height: 100%; 
 	padding:0; 
 	margin:0; 
-	font: 10pt/1.4 Helvetica, Arial, sans-serif, Verdana; 
+	font: 10pt/1.4 Verdana, Arial, sans-serif; 
 	padding-left: 1em; 
 	padding-right: 1em; 
 	-webkit-text-size-adjust: 95%; 
@@ -31,6 +31,13 @@ a {
 	cursor:pointer;
 }
 a:hover { /*text-decoration: underline;*/ color: #46FDFD; }
+
+ul { list-style:none; padding:0; }
+li:before { content: "—"; position:relative; left:-6px;}
+
+#about a {
+	text-decoration: underline;
+}
 .active { font-weight: bold; }
 .hidden {
 	display:none;
