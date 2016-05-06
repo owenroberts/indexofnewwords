@@ -76,7 +76,7 @@ var loadNouns = function(prefix) {
 					setTimeout(function() {
 						var n = $('<a>')
 							.on("mouseover", function(){
-								$(this).css({color:"rgb("+getRandomInt(150, 200)+","+getRandomInt(150, 255)+","+getRandomInt(150, 255)});
+								$(this).css({color:"hsla("+getRandomInt(30,300, 200)+","+getRandomInt(60,90)+"%,"+getRandomInt(50, 80)+"%,1)"});
 							})
 							.on("mouseout", function(){
 								$(this).css({color:"black"});
