@@ -5,7 +5,7 @@ import nltk
 import random
 from markov import MarkovGenerator
 
-text = "quarter-stein"
+text = "red"
 
 prefix_file = open("../pref.txt")
 prefixes = prefix_file.readlines()
@@ -34,6 +34,8 @@ for line in lines:
 generator = MarkovGenerator(n=1, max=1000)
 generator.feed(newlines)
 genpoem = generator.generate()
+
+print newlines
 
 f = open(text+"-pref.txt", "w")
 f.write(newlines)

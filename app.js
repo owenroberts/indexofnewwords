@@ -1,7 +1,3 @@
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 var stop = false;
 var nounset;
@@ -13,48 +9,86 @@ $('#stop').on('click', function(ev) {
 });
 
 $("#word").on('click', function() { 
-	$('#set').removeClass('hidden');
+	$('#set-nouns').removeClass('hidden');
+	$('#text-gen').hide();	
 });
 
-var asyncLoop = function(o) {
-	var i=-1;
-
-	var loop = function() {
-		if (stop) return;
-		i++;
-		if (i==o.length){o.callback(); return;}
-		o.functionToLoop(loop, i);
-	}
-	loop();
+var updateBreadcrumb = function(link) {
+	var l = $(link).clone();
+	$('#breadcrumb').append(" > ").append(l);
 }
+$('body').on('click', '#breadcrumb a',  function() {
+	var n = this.hash.split("#")[1];
+	$('#nouns').html("");
+});
+
 
 var setNouns = function(string) {
-	$('#menu').hide();
-	nounset = string;
-	$('#set').addClass('hidden');
-	loadPrefixes();
-}
 
-var loadPrefixes = function() {
+	var n = this.hash.split("#")[1];
+	updateBreadcrumb(this);
+	$('#set-nouns').addClass('hidden');
+	if (n == "input") $('#choose-noun').removeClass('hidden');
+	/*nounset = string;
+	
+	loadPrefixes();*/
+};
+$('#set-nouns a').on('click', setNouns);
+
+$('#input-noun').on('change', function() {
+	$('#choose-noun').addClass('hidden');
+	updateBreadcrumb("<a href=#" + this.value + ">"+this.value+"</a>");
+	loadPrefixes(this.value);
+});
+
+var loadPrefixes = function(noun) {
 	$.ajax({
-		url: "./pref.txt",
-		success: function(data) {
-			var prefixes = data.split('\n');
-			prefixes.sort();
-			for (var i = 0; i < prefixes.length; i++) {
-				var prefDiv = $('<a>')
-					.attr({"href":"#"+prefixes[i]})
-					.addClass("pref")
-					.text(prefixes[i]);
-				prefDiv.on('click', function() {
-					loadNouns(this.innerHTML);
+		url: "./data/prefix.csv",
+			success: function(data) {
+			var csv = CSVToArray(data);
+			var prefixes = [];
+			for (var i = 0; i < csv.length; i++) {
+				prefixes.push( csv[i][0].split(/[^a-zA-Z]/)[0].toLowerCase() );
+			}			
+			if (noun) {
+				asyncLoop({
+					length:prefixes.length,
+					functionToLoop : function(loop, i) {
+						setTimeout(function() {
+							addEntry(prefixes[i], noun);
+							loop();
+						}, 1);
+					},
+					callback : function() {
+						console.log("done!");
+					}
 				});
-				$('#prefixes').append(prefDiv);
-				$('#prefixes').append("<br>");
+			} else {
+				var prefixes = data.split('\n');
+				prefixes.sort();
+				for (var i = 0; i < prefixes.length; i++) {
+					var prefDiv = $('<a>')
+						.attr({"href":"#"+prefixes[i]})
+						.addClass("pref")
+						.text(prefixes[i]);
+					prefDiv.on('click', function() {
+						loadNouns(this.innerHTML);
+					});
+					$('#prefixes').append(prefDiv);
+					$('#prefixes').append("<br>");
+				}
+				$('#prefix').removeClass('hidden');
 			}
-			$('#prefix').removeClass('hidden');
 		}
 	});
+}
+
+var addEntry = function(p, n) {
+	var n = $('<a>')
+		.text(p + n)
+		.attr("href", "#" + p + "-" + n)
+		.addClass("newword");
+	$('#nouns').append(n).append("<br>");
 }
 
 $('#input-prefix').on('change', function() {
@@ -64,23 +98,16 @@ $('#input-prefix').on('change', function() {
 var loadNouns = function(prefix) {
 	$('#prefix').addClass('hidden');
 	$.ajax({
-		url: "./"+nounset+".txt",
+		url: "./data/"+nounset+".txt",
 		success: function(data) {
 			var nouns = data.split(',\n');
 			nouns.sort();
 			$("#counter").removeClass("hidden");				
-
 			asyncLoop({
 				length:nouns.length,
 				functionToLoop : function(loop, i) {
 					setTimeout(function() {
-						var n = $('<a>')
-							
-							.text(prefix + nouns[i])
-							.attr("href", "#" + prefix + "-" + nouns[i])
-							.addClass("newword");
-						$('#nouns').append(n).append("<br>");
-						$('#counter span').text(+i+1 + " / " + nouns.length);
+						addEntry(prefix, nouns[i]);
 						loop();
 					}, 1);
 				},
@@ -165,6 +192,7 @@ $('body').on("mouseover", ".newword", function(){
 })
 
 var getDef = function() {
+	updateBreadcrumb(this);
 	$("#nouns").addClass('hidden');
 	$("#prefix").addClass('hidden');
 	$("#alphabetical").addClass('hidden');

@@ -17,16 +17,24 @@
 		<hr>
 
 		<div id="menu">
-			<a id="word">Word generator</a>
-			<br>
-			<a href="text.html">Text generator</a>
+			<div id="breadcrumb">
+				<a id="word">Word generator</a>
+
+			</div>
+			<div id="text-gen"><a href="text.html">Text generator</a></div>
 		</div>
 
-		<div id="set" class="hidden">
+		<div id="set-nouns" class="hidden">
 			<ul>
-				<li><a href="#all" onclick="setNouns('allnouns');">All nouns</a></li>
-				<li><a href="#some" onclick="setNouns('somenouns');">Some nouns</a></li>
+				<li><a href="#input">Input noun</a></li>
+				<li><a href="#random">Random noun</a></li>
+				<li><a href="#some">1525 nouns</a></li>
+				<li><a href="#all">55,191 nouns</a></li>
 			</ul>
+		</div>
+
+		<div id="choose-noun" class="hidden">
+			<input id="input-noun" type="text" placeholder="Input noun">
 		</div>
 
 		<div id="prefix" class="hidden">
@@ -50,6 +58,7 @@
 		</div>
 	</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<script src="nouns.js"></script>
+	<script src="lib/jquery.min.js"></script>
+	<script src="lib/cool.js"></script>
+	<script src="app.js"></script>
 </body>

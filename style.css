@@ -45,17 +45,13 @@ li:before { content: "—"; position:relative; left:-6px;}
 	-webkit-column-gap: 1em;
 	-moz-column-gap: 1em;
 	column-gap: 1em;
+	margin-top:1em;
 }
 
-#counter {
-	float:right;
-}
-#menu {
-	float:left;
-}
-#set {
-	margin-left:150px;
-}
+#counter { float:right; }
+
+#set-noun { margin-left:15px; }
+#choose-noun { padding: 1em 0; }
 
 #def-wrap {
 	
