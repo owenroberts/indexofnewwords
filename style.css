@@ -50,8 +50,9 @@ li:before { content: "—"; position:relative; left:-6px;}
 
 #counter { float:right; }
 
-#set-noun { margin-left:15px; }
-#choose-noun { padding: 1em 0; }
+.menu { width: 160px; float:left;}
+#input-noun { padding: 1em 0; }
+#nouns, #def-wrap, #prefix, #alphabetical { clear:both;}
 
 #def-wrap {
 	

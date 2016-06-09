@@ -1,7 +1,18 @@
 var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 var stop = false;
 var nounset;
+var prefdef = [];
 
+var asyncLoop = function(o) {
+	var i=-1;
+	var loop = function() {
+		if (stop) return;
+		i++;
+		if (i==o.length){o.callback(); return;}
+		o.functionToLoop(loop, i);
+	}
+	loop();
+}
 
 $('#stop').on('click', function(ev) {
 	ev.preventDefault();
@@ -10,45 +21,75 @@ $('#stop').on('click', function(ev) {
 
 $("#word").on('click', function() { 
 	$('#set-nouns').removeClass('hidden');
-	$('#text-gen').hide();	
+	$('#set-nouns li').removeClass('hidden');
+	$('#nouns').addClass("hidden");
+	$('#def-wrap').addClass("hidden");
+	collapse(this);
 });
 
-var updateBreadcrumb = function(link) {
-	var l = $(link).clone();
-	$('#breadcrumb').append(" > ").append(l);
+var collapse = function(e) {
+	var list = e.parentNode.parentNode;
+	var items = list.childNodes;
+
+	for (var i = 0; i < items.length; i++) {
+		if (items[i] != e.parentNode) {
+			$(items[i]).addClass("hidden");
+		}
+	}	
 }
-$('body').on('click', '#breadcrumb a',  function() {
-	var n = this.hash.split("#")[1];
-	$('#nouns').html("");
-});
-
 
 var setNouns = function(string) {
-
-	var n = this.hash.split("#")[1];
-	updateBreadcrumb(this);
-	$('#set-nouns').addClass('hidden');
-	if (n == "input") $('#choose-noun').removeClass('hidden');
-	/*nounset = string;
-	
-	loadPrefixes();*/
+	$('prefixes').html("");
+	$('#nouns').addClass("hidden");
+	nounset = this.hash.split("#")[1] + "nouns";
+	collapse(this);
+	loadPrefixes();
 };
-$('#set-nouns a').on('click', setNouns);
+$('.numnouns').on('click', setNouns);
 
-$('#input-noun').on('change', function() {
-	$('#choose-noun').addClass('hidden');
-	updateBreadcrumb("<a href=#" + this.value + ">"+this.value+"</a>");
-	loadPrefixes(this.value);
+$('#choose-noun').on('click', function() {
+	$('#nouns').html("");
+	$('#def-wrap').addClass("hidden");
+	$('#input-noun').removeClass('hidden');
 });
+
+$('#input-noun input').on('change', function() {
+	$('#input-noun').addClass('hidden');
+	$('#nouns').removeClass("hidden");
+	loadPrefixes(this.value);
+	collapse(this.parentNode);
+});
+
+$('#input-prefix').on('change', function() {
+	loadNouns(this.value);
+});
+
+var randomNoun = function() {
+	$('#nouns').html("");
+	$('#def-wrap').addClass("hidden");
+	$('#nouns').removeClass("hidden");
+	collapse(this);
+	$.ajax({
+		url: "./data/somenouns.txt",
+		success: function(data) {
+			var nouns = data.split(',\n');
+			loadPrefixes( nouns[getRandomInt(0, nouns.length - 1)] );
+		}
+	});
+}
+$('#random').on('click', randomNoun);
 
 var loadPrefixes = function(noun) {
 	$.ajax({
 		url: "./data/prefix.csv",
-			success: function(data) {
+		success: function(data) {
+			prefloaded = true;
 			var csv = CSVToArray(data);
 			var prefixes = [];
 			for (var i = 0; i < csv.length; i++) {
-				prefixes.push( csv[i][0].split(/[^a-zA-Z]/)[0].toLowerCase() );
+				var pref = csv[i][0].split(/[^a-zA-Z]/)[0].toLowerCase(); 
+				prefixes.push(  pref  );
+				prefdef[pref] = csv[i][1];
 			}			
 			if (noun) {
 				asyncLoop({
@@ -64,8 +105,6 @@ var loadPrefixes = function(noun) {
 					}
 				});
 			} else {
-				var prefixes = data.split('\n');
-				prefixes.sort();
 				for (var i = 0; i < prefixes.length; i++) {
 					var prefDiv = $('<a>')
 						.attr({"href":"#"+prefixes[i]})
@@ -79,7 +118,7 @@ var loadPrefixes = function(noun) {
 				}
 				$('#prefix').removeClass('hidden');
 			}
-		}
+		}	
 	});
 }
 
@@ -91,23 +130,23 @@ var addEntry = function(p, n) {
 	$('#nouns').append(n).append("<br>");
 }
 
-$('#input-prefix').on('change', function() {
-	loadNouns(this.value);
-});
-
 var loadNouns = function(prefix) {
+	$('#nouns').removeClass("hidden");
+	$('#nouns').html("");
 	$('#prefix').addClass('hidden');
 	$.ajax({
 		url: "./data/"+nounset+".txt",
 		success: function(data) {
 			var nouns = data.split(',\n');
 			nouns.sort();
-			$("#counter").removeClass("hidden");				
+			$("#counter").removeClass("hidden");
+			stop = false;		
 			asyncLoop({
 				length:nouns.length,
 				functionToLoop : function(loop, i) {
 					setTimeout(function() {
 						addEntry(prefix, nouns[i]);
+						$('#counter span').text(+i+1 + " / " + nouns.length);
 						loop();
 					}, 1);
 				},
@@ -189,10 +228,10 @@ $('body').on("mouseover", ".newword", function(){
 })
 .on("mouseout", ".newword", function(){
 	$(this).css({color:"black"});
-})
+});
+
 
 var getDef = function() {
-	updateBreadcrumb(this);
 	$("#nouns").addClass('hidden');
 	$("#prefix").addClass('hidden');
 	$("#alphabetical").addClass('hidden');
@@ -201,6 +240,7 @@ var getDef = function() {
 	var pair = this.hash.split("-");
 	pair[0] = pair[0].replace('#', '');
 	$('#prefix-word').html(pair[0]);
+	$('#prefix-def').html( prefdef[pair[0]] );
 	$('#noun-word').html(pair[1]);
 
 
@@ -210,23 +250,23 @@ var getDef = function() {
     	data: { 
         	action: "query", 
         	prop: 'extracts', 
-        	
         	titles: pair[1],
-        	format: "json",
-        	
+        	format: "json"
     	},
 		success: function(data) {
-			console.log(data.query);
 			var html = "";
 			for (var obj in data.query.pages) {
-				console.log(data.query.pages[obj].extract);
-				html = data.query.pages[obj].extract;
+				if (data.query.pages[obj].extract) 
+					html = data.query.pages[obj].extract;
+				else 
+					$('#noun-def').html("Not found.");
 			}
-			
 			$('#noun-def').html(html);
 		},
 		error: function(error) {
 			console.log(error);
+			$('#noun-def').html("Not found.");
+
 		}
 	});
 };

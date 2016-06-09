@@ -16,29 +16,30 @@
 		</div>
 		<hr>
 
-		<div id="menu">
-			<div id="breadcrumb">
-				<a id="word">Word generator</a>
-
-			</div>
-			<div id="text-gen"><a href="text.html">Text generator</a></div>
-		</div>
-
-		<div id="set-nouns" class="hidden">
+		<div id="menu" class="menu">
 			<ul>
-				<li><a href="#input">Input noun</a></li>
-				<li><a href="#random">Random noun</a></li>
-				<li><a href="#some">1525 nouns</a></li>
-				<li><a href="#all">55,191 nouns</a></li>
+				<li><a id="word">Word generator</a></li>
+				<li><a href="text.html">Text generator</a></li>
 			</ul>
 		</div>
 
-		<div id="choose-noun" class="hidden">
-			<input id="input-noun" type="text" placeholder="Input noun">
+		<div id="set-nouns" class="menu hidden">
+			<ul>
+				<li><a id="choose-noun" href="#input">Input noun</a>
+					<div id="input-noun" class="hidden">
+						<input type="text" placeholder="Input noun">
+					</div>
+				</li>
+				<li><a id="random" href="#random">Random noun</a></li>
+				<li><a class="numnouns" href="#some">1525 nouns</a></li>
+				<li><a class="numnouns" href="#all">55,191 nouns</a></li>
+			</ul>
 		</div>
 
+		
+
 		<div id="prefix" class="hidden">
-			<div>Choose a prefix: <input id="input-prefix" type="text" placeholder="Input prefix"></div><br>
+			<div><input id="input-prefix" type="text" placeholder="Input prefix"></div><br>
 			<div id="prefixes"></div>
 		</div> 
  		<div id="nouns"></div>
@@ -54,7 +55,7 @@
 					<div id="noun-def">Loading...</div>
 				</div>
 			</div>
-			<p style="clear:both;">Defintions sourced from <a href="https://www.wiktionary.org/" target="blank">Wiktionary.org</a></p>
+			
 		</div>
 	</div>
 
